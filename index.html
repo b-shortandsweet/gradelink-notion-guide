@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heart at Home Assignment Tracker</title>
+<!-- Favicon inlined as an SVG data URI, not a linked .ico: this page ships as a
+     single standalone file a parent opens from their own Downloads, so anything
+     fetched from a second file or a URL would simply not load. Wine heart on
+     Paper Cream, per the palette below. -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23FBF7EB'/><path d='M16 26.5C16 26.5 4.5 19.6 4.5 12.4 4.5 8.6 7.5 5.5 11.2 5.5c2.2 0 4 1.1 4.8 2.6.8-1.5 2.6-2.6 4.8-2.6 3.7 0 6.7 3.1 6.7 6.9 0 7.2-11.5 14.1-11.5 14.1z' fill='%237A2A3D'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Sacramento&display=swap">
+
+<style>
+  /* Heart at Home — palette per brand_context/visual-identity/tokens.json.
+     Structural neutrals are warm wood + cool stone, never grey. Dark surfaces
+     are wood-tones (Espresso / Walnut), never black. Composition is the
+     Wine + Brass signature pair: Wine does the work (step markers, warnings,
+     the handwriting line), Brass takes the asides and chrome details.
+     The other two jewels hold functional roles, not compositional ones, so
+     they don't count toward the jewel tally: Inkwell is links (doorways out),
+     Pine is the machine (code chips + text selection — syntax-coloring
+     convention, and a highlight that only exists under the reader's hands). */
+  :root {
+    --paper:       #FBF7EB;  /* Paper Cream */
+    --linen:       #E8DECF;  /* Linen */
+    --surface:     #FFFDF6;
+    --pale-oak:    #CBB698;
+    --walnut:      #7A5A3E;
+    --espresso:    #2E1F15;
+    --granite:     #252428;
+    --slate-mist:  #7C7A7E;
+    --wine:        #7A2A3D;
+    --inkwell:     #2A476B;
+    --pine:        #2A5240;
+    --brass:       #A67B3E;
+
+    --ground:      var(--paper);
+    --card:        var(--surface);
+    --card-alt:    var(--linen);
+    --ink:         var(--granite);
+    --ink-soft:    #4A4850;
+    --muted:       var(--slate-mist);
+    --rule:        var(--pale-oak);
+    --rule-strong: #B39C7C;
+    --accent:      var(--wine);
+    --accent-ink:  #6B2436;
+    --accent-on:   var(--paper);
+    --accent-soft: #F2E6E3;
+    --inkwell-ink: #24405F;
+    --pine-ink:    #234837;
+    --pine-soft:   #E6EEE0;
+    --select-bg:   var(--pine);
+    --select-ink:  var(--paper);
+    --brass-ink:   #7E5C28;
+    --brass-soft:  #F7EEDC;
+
+    --step-1: clamp(0.79rem, 0.77rem + 0.1vw, 0.84rem);
+    --step0:  clamp(1.02rem, 0.99rem + 0.16vw, 1.1rem);
+    --step1:  clamp(1.22rem, 1.15rem + 0.34vw, 1.42rem);
+    --step2:  clamp(1.55rem, 1.38rem + 0.75vw, 2.05rem);
+    --step3:  clamp(2.1rem, 1.72rem + 1.7vw, 3.15rem);
+
+    --measure: 65ch;
+    --pad: clamp(1.15rem, 4vw, 2.75rem);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      var(--espresso);
+      --card:        #3B2A1C;
+      --card-alt:    #46331F;
+      --ink:         var(--paper);
+      --ink-soft:    var(--linen);
+      --muted:       #BCA98F;
+      --rule:        #4E3925;
+      --rule-strong: #6A4E31;
+      --accent:      #D5909E;      /* Wine lightened to its dusty-rose register, same treatment as the other jewels */
+      --accent-ink:  #E0A9B4;
+      --accent-on:   var(--espresso);
+      --accent-soft: #412229;
+      --inkwell-ink: #92B4DB;
+      --pine-ink:    #86C1A3;
+      --pine-soft:   #33402B;
+      --select-bg:   #86C1A3;
+      --select-ink:  var(--espresso);
+      --brass-ink:   #DCBA82;
+      --brass-soft:  #3E2E1A;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:      var(--espresso);
+    --card:        #3B2A1C;
+    --card-alt:    #46331F;
+    --ink:         var(--paper);
+    --ink-soft:    var(--linen);
+    --muted:       #BCA98F;
+    --rule:        #4E3925;
+    --rule-strong: #6A4E31;
+    --accent:      #D5909E;
+    --accent-ink:  #E0A9B4;
+    --accent-on:   var(--espresso);
+    --accent-soft: #412229;
+    --inkwell-ink: #92B4DB;
+    --pine-ink:    #86C1A3;
+    --pine-soft:   #33402B;
+    --select-bg:   #86C1A3;
+    --select-ink:  var(--espresso);
+    --brass-ink:   #DCBA82;
+    --brass-soft:  #3E2E1A;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "DM Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: var(--step0);
+    line-height: 1.68;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 53rem;
+    margin: 0 auto;
+    padding: clamp(2rem, 6vw, 4.5rem) var(--pad) 5rem;
+  }
+
+  h1, h2, h3 {
+    font-family: "DM Serif Display", ui-serif, Georgia, serif;
+    font-weight: 400;
+    text-wrap: balance;
+    line-height: 1.18;
+    margin: 0;
+  }
+
+  a { color: var(--inkwell-ink); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  code {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.85em;
+    color: var(--pine-ink);
+    background: var(--pine-soft);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 0.1em 0.36em;
+    word-break: break-word;
+  }
+
+  ::selection { background: var(--select-bg); color: var(--select-ink); }
+
+  .hand {
+    font-family: Sacramento, cursive;
+    font-size: 1.7em;
+    line-height: 1;
+    color: var(--accent);
+  }
+
+  /* ── Masthead ─────────────────────────────────────── */
+  .masthead { border-bottom: 1px solid var(--rule-strong); padding-bottom: 2rem; }
+  .eyebrow {
+    font-size: var(--step-1);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--walnut);
+    margin: 0 0 1rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .eyebrow { color: var(--brass-ink); }
+  }
+  :root[data-theme="dark"] .eyebrow { color: var(--brass-ink); }
+
+  h1 { font-size: var(--step3); letter-spacing: -0.012em; }
+  .standfirst {
+    font-family: "DM Sans", sans-serif;
+    font-style: italic;
+    font-size: var(--step0);
+    color: var(--ink);
+    max-width: var(--measure);
+    margin: 1.1rem 0 0;
+  }
+  .standfirst + p { max-width: var(--measure); color: var(--ink-soft); margin-top: 1rem; }
+
+  .timing {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;   /* keep the three cards on one shared baseline */
+    gap: 0.7rem;
+    margin: 1.9rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .timing li {
+    display: flex;
+    flex-direction: column;
+    /* The global `li + li` margin rule reaches these too and shunts cards 2
+       and 3 down out of line with card 1. Reset it here. */
+    margin: 0;
+    gap: 0.1rem;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 0.7rem 1.1rem;
+  }
+  .timing .k {
+    font-size: var(--step-1);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .timing .v {
+    font-family: "DM Serif Display", serif;
+    font-size: var(--step1);
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+
+  /* ── Callouts ─────────────────────────────────────── */
+  .note {
+    border-radius: 3px;
+    padding: 1.1rem 1.3rem;
+    margin: 1.7rem 0;
+    border: 1px solid var(--rule);
+    background: var(--card);
+    max-width: var(--measure);
+  }
+  .note p { margin: 0; }
+  .note p + p { margin-top: 0.6rem; }
+  .note .label {
+    display: block;
+    font-family: "DM Sans", sans-serif;
+    font-style: italic;
+    font-size: var(--step0);
+    margin-bottom: 0.4rem;
+    color: var(--accent-ink);
+  }
+  .note.wine { border-left: 2px solid var(--accent); background: var(--accent-soft); }
+  .note.loud { border-left-width: 5px; padding-top: 1.15rem; padding-bottom: 1.15rem; }
+  .note.loud .label { font-size: var(--step0); }
+  .note.brass { border-left: 2px solid var(--brass); background: var(--brass-soft); }
+  .note.brass .label { color: var(--brass-ink); }
+
+  /* ── Steps ────────────────────────────────────────── */
+  .part { margin-top: 3.4rem; }
+  .part-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.65rem;
+    margin-bottom: 1.5rem;
+  }
+  .part-num {
+    font-family: "DM Sans", sans-serif;
+    font-size: var(--step-1);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--accent-on);
+    background: var(--accent);
+    border-radius: 2px;
+    padding: 0.28em 0.6em;
+    flex: none;
+  }
+  .part-head h2 { font-size: var(--step2); }
+  .part-head.no-num { border-bottom-color: var(--rule-strong); }
+  /* Wayfinding numerals go Brass in dark — a solid rose fill reads pink;
+     the lightened Wine stays text/border-only. Matches the li::marker rule. */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .part-num { background: #C9A063; color: var(--espresso); }
+  }
+  :root[data-theme="dark"] .part-num { background: #C9A063; color: var(--espresso); }
+
+  .part > p, .part > ol, .part > ul { max-width: var(--measure); }
+
+  ol, ul { padding-left: 1.4rem; }
+  li + li { margin-top: 0.55rem; }
+  li::marker { color: var(--walnut); font-variant-numeric: tabular-nums; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) li::marker { color: var(--brass); }
+  }
+  :root[data-theme="dark"] li::marker { color: var(--brass); }
+
+  /* ── Platform columns ─────────────────────────────── */
+  .platforms {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+    gap: 1.2rem;
+    margin: 1.6rem 0;
+  }
+  .platform {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 1.3rem 1.45rem 1.5rem;
+  }
+  .platform h3 {
+    font-size: var(--step1);
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .platform ol { margin: 0; }
+
+  /* ── Routine ──────────────────────────────────────── */
+  .routine {
+    background: var(--card-alt);
+    border: 1px solid var(--rule-strong);
+    border-radius: 3px;
+    padding: 1.6rem 1.7rem;
+    margin-top: 1.5rem;
+  }
+  .routine h3 { font-size: var(--step1); margin-bottom: 0.9rem; }
+  .routine ol { margin: 0; max-width: var(--measure); }
+  .routine .hand { display: block; margin-top: 0.9rem; }
+
+  /* ── Troubleshooting ──────────────────────────────── */
+  .trouble { display: grid; gap: 0.7rem; margin-top: 1.5rem; }
+  details {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  summary {
+    cursor: pointer;
+    padding: 0.9rem 1.2rem;
+    font-weight: 500;
+    color: var(--ink);
+    list-style: none;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::before {
+    content: "\2014";
+    color: var(--accent);
+    flex: none;
+    line-height: 1.55;
+  }
+  details[open] summary { border-bottom: 1px solid var(--rule); }
+  .answer { padding: 1rem 1.2rem 1.15rem 2.7rem; color: var(--ink-soft); }
+  .answer p { margin: 0; max-width: var(--measure); }
+  .answer p + p { margin-top: 0.55rem; }
+
+  /* ── Optional / footer ────────────────────────────── */
+  .optional {
+    margin-top: 3.4rem;
+    padding-top: 2.1rem;
+    border-top: 1px solid var(--rule);
+    color: var(--ink-soft);
+  }
+  .optional h2 { font-size: var(--step1); color: var(--ink); }
+  .optional ol, .optional p { max-width: var(--measure); }
+
+  .signoff {
+    margin-top: 3.4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+    max-width: var(--measure);
+    color: var(--ink-soft);
+  }
+
+  .placeholder {
+    background: var(--brass-soft);
+    border-bottom: 1px solid var(--brass);
+    color: var(--brass-ink);
+    font-weight: 500;
+    padding: 0.05em 0.3em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow"><img src="data:image/png;base64,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" alt="" width="18" height="19" style="vertical-align:-4px;margin-right:0.6rem;opacity:0.9;">Heart at Home</p>
+    <h1>The Assignment Tracker</h1>
+    <p class="standfirst">
+      Last year, flipping between tabs on the curriculum spreadsheets to see
+      both kids' assignments was so painful, and worse - I kept losing track of
+      what we had done or not. So I started copying and pasting my girls'
+      assignments into my notes app, called Notion, one at a time. That was even
+      more painful.
+    </p>
+    <p style="color: var(--accent);">So then, I built a tool.</p>
+    <p style="font-style: italic;">
+      A few clicks and both kids' assignments landed in a single place where I
+      could edit the plan to what worked for us, track progress, and then mark
+      assignments done and move on with my life.
+    </p>
+    <p style="font-style: italic;">
+      Since our school just moved to Gradelink, I had to tweak the tool from
+      last year's version. Now it's a Chrome extension and there's no software
+      to install or run. So, consider this a starting point rather than a
+      finished thing, and let me know where it breaks (and bends). If you can't
+      get it going, I'll meet you at the coffee shop and walk you through it. 😉
+    </p>
+    <p class="hand">~ Brianne</p>
+    <ul class="timing">
+      <li><span class="k">Setting up</span><span class="v">about 15 minutes, once</span></li>
+      <li><span class="k">Each week after</span><span class="v">under a minute</span></li>
+      <li><span class="k">What it costs</span><span class="v">nothing</span></li>
+    </ul>
+  </header>
+
+  <div class="note wine loud">
+    <span class="label">⚠️ A note on privacy and security</span>
+    <p>
+      <strong>The extension does not send or save any information that I or anyone
+      else can access.</strong> The extension has no server. There is no account to
+      create, nothing is collected, and nothing is sent anywhere except to your
+      own Notion workspace, when you ask it to.
+    </p>
+    <p>
+      You can read the full privacy policy
+      <a href="https://github.com/b-shortandsweet/gradelink-notion-privacy">here</a>.
+    </p>
+  </div>
+
+  <section class="part">
+    <div class="part-head">
+      <span class="part-num">01</span>
+      <h2>Install the extension</h2>
+    </div>
+    <p>
+      It lives in the Chrome Web Store, which means you can install it in just a
+      few clicks and use it with one click each week, right from your Chrome
+      browser.
+    </p>
+    <ol>
+      <li>Open <a href="https://chrome.google.com/webstore/detail/dlfifoaegchgkgbefelekagfndkidapo"><strong>Gradelink to Notion</strong></a>.</li>
+      <li>Click <strong>Add to Chrome</strong>, then <strong>Add extension</strong> when Chrome asks.</li>
+      <li>Click the <strong>puzzle-piece icon</strong> at the top right of Chrome (next to the search bar), find <strong>Gradelink to Notion</strong> in the list, and click the <strong>pin</strong> next to it.</li>
+    </ol>
+    <p>
+      That third step is optional, but helpful; pinning puts the button on your toolbar where you
+      can reach it. Chrome tucks new extensions behind that puzzle piece by
+      default, and the button is how you run this every week.
+    </p>
+
+    <div class="note brass">
+      <span class="label">You won't find this extension by searching the Chrome extension store</span>
+      <p>
+        It's unlisted on purpose, so the link above is the way in. It's still the
+        same store and the same install; it just isn't advertised to strangers at
+        other schools.
+      </p>
+    </div>
+  </section>
+
+  <section class="part">
+    <div class="part-head">
+      <span class="part-num">02</span>
+      <h2>Set up Notion</h2>
+    </div>
+    <p>
+      Notion is a free app — that can be used for all kinds of things - from my
+      simple assignment tracker, all the way to an all-encompassing life planner,
+      and everything in between.
+    </p>
+    <p>If you already use it, skip to number 3 in this list.</p>
+    <ol>
+      <li><strong>Make a free account.</strong> Go to <a href="https://www.notion.com">notion.com</a>, click <strong>Get Notion free</strong>, and sign up with your email or your Google account. Pick <strong>For personal use</strong> when it asks. The free plan covers everything here.</li>
+      <li><strong>Get the app</strong> — optional, but nicer than the browser. <a href="https://www.notion.com/desktop">notion.com/desktop</a></li>
+      <li>Open the Notion template — <a href="https://heartathome.notion.site/?v=3ca29af7653b80e6bf98000cc56ca62d"><strong>The Assignment Tracker</strong></a></li>
+      <li>Click <strong>Duplicate</strong>, top right.</li>
+      <li>It copies into your own Notion workspace. That copy is yours — rename it, change the colors, make it look like your house.</li>
+      <li>Rename <code>First Child</code> and <code>Second Child</code> to your own children. Open either EXAMPLE row, click the <strong>Person</strong> label, choose <strong>Edit property</strong>, then the option you want to rename and type in the box at the top of the menu.</li>
+      <li>Rename the two boards to match. That's a separate label from the one above: click the settings icon at the far right of a board, next to the blue <strong>New</strong> button, and type the child's name in the box at the top.</li>
+    </ol>
+  </section>
+
+  <section class="part">
+    <div class="part-head">
+      <span class="part-num">03</span>
+      <h2>Make your Notion key</h2>
+    </div>
+    <p>
+      This is the most technical part of the whole setup, but it's the most
+      important because it's what lets each assignment arrive with its full
+      description — the teacher's bolded heading, the goal, the materials, the
+      instructions, and attachment links.
+    </p>
+    <p>
+      You're making a key that only opens your own tracker, and handing it to the
+      extension.
+    </p>
+    <ol>
+      <li>Open <a href="https://www.notion.so/my-integrations">notion.so/my-integrations</a> in a browser.</li>
+      <li>Click <strong>New integration</strong>.</li>
+      <li>Name it something like <code>Homeschool</code>, pick your workspace, click <strong>Submit</strong>.</li>
+      <li>Copy the <strong>Internal Integration Secret</strong> — a long code starting <code>ntn_</code> or <code>secret_</code>. Keep it somewhere for a minute; you'll paste it in the next step.</li>
+      <li>Open your tracker in Notion. Click the <strong>•••</strong> menu at the top right, choose <strong>Connections</strong>, and pick the integration you just made. <strong>Without this the key opens nothing</strong> — it's the step everybody misses, and it's why the extension can't find your tracker later.</li>
+    </ol>
+
+    <div class="note wine loud">
+      <span class="label">⚠️ Treat that secret like a password</span>
+      <p>
+        Your Notion key allows access to your personal Notion app; anyone who has
+        it can access whatever you put in Notion. Once you paste it in to the
+        extension, it's kept by the extension on your own computer, and it goes
+        nowhere except to your Notion.
+      </p>
+      <p>
+        <strong>Never send a copy of the key to anyone - including me.</strong> If
+        something breaks, send me what the extension says on screen. That's all I
+        need, and it has no secret in it.
+      </p>
+    </div>
+  </section>
+
+  <section class="part">
+    <div class="part-head">
+      <span class="part-num">04</span>
+      <h2>Fill in the settings</h2>
+    </div>
+    <p>Click the extension button, then <strong>Settings</strong>.</p>
+
+    <h3 style="font-size:var(--step1);margin:2.1rem 0 0.85rem;">Connect to Notion</h3>
+    <ol>
+      <li>Paste your secret into <strong>Integration secret</strong>.</li>
+      <li>Click <strong>Find</strong>. It lists the trackers that key can reach — usually just the one.</li>
+      <li>Pick the assignment tracker from the list.</li>
+      <li>Press <strong>Save</strong>, then <strong>Check connection</strong>. It should tell you your tracker is reachable.</li>
+    </ol>
+    <p>
+      If <strong>Find</strong> comes back empty-handed, it's almost always #5 in the
+      "Make your Notion key" step above — the key exists but hasn't been connected
+      to the tracker yet.
+    </p>
+
+    <h3 style="font-size:var(--step1);margin:2.1rem 0 0.85rem;">Your children</h3>
+    <p>
+      One row per child. On the left, the name you set up in step #2 for your
+      Notion tracker. On the right, the name <strong>as Gradelink spells it</strong>
+      (it's the name in the menu at the top right of the portal), because schools
+      often use the full name for a child everyone calls something shorter:
+      Katherine for Katie, Samuel for Sam.
+    </p>
+    <p>
+      Skipping this section doesn't lose any assignments, but it files them under
+      the name the school uses instead of the name you setup.
+    </p>
+
+    <h3 style="font-size:var(--step1);margin:2.1rem 0 0.85rem;">Subjects</h3>
+    <p>
+      Course names out of Gradelink might be long and school-ish. This is where you
+      shorten them: when a course name contains the words on the left, the work is
+      filed under the subject on the right.
+    </p>
+    <p>
+      Whatever you type on the right has to match a <strong>Subject</strong> option
+      in your tracker (instructions for how to add a subject in Notion are on the
+      template). Anything that doesn't match a subject lands under
+      <strong>Other</strong> — that's the box underneath, and you can change it.
+    </p>
+
+    <h3 style="font-size:var(--step1);margin:2.1rem 0 0.85rem;">Courses to skip</h3>
+    <p>
+      Some courses you don't need on a board at all — electives, chapel, study
+      hall. Type a word from the course name here and nothing from that course
+      ever gets sent to Notion.
+    </p>
+
+    <h3 style="font-size:var(--step1);margin:2.1rem 0 0.85rem;">Personal homeschool additions</h3>
+    <p>
+      The stuff you might add in yourself that isn't in Gradelink — piano practice,
+      handwriting practice, extra reading. Each one gets added every week. The days
+      are optional: set them and each week's copy carries that weekday's date;
+      leave them and the row arrives without a date.
+    </p>
+    <p>
+      Press <strong>Save</strong> when you're done. You can come back and change any
+      of this later.
+    </p>
+  </section>
+
+  <section class="part">
+    <div class="part-head">
+      <span class="part-num">05</span>
+      <h2>Each week</h2>
+    </div>
+    <div class="routine">
+      <ol>
+        <li>Log into Gradelink the way you normally do.</li>
+        <li>Click <strong>Grades</strong> on the left.</li>
+        <li>Check the dropdown at the top is showing the current quarter.</li>
+        <li>Click the extension button on your toolbar, then <strong>Sync this page to Notion</strong>.</li>
+      </ol>
+      <span class="hand" style="margin-top:1.5rem;">That's the whole thing.</span>
+    </div>
+    <p>
+      <strong>You don't have to switch kids in the portal</strong>. The extension
+      handles this itself.
+    </p>
+  </section>
+
+  <section class="part">
+    <div class="part-head">
+      <span class="part-num">06</span>
+      <h2>What it tells you</h2>
+    </div>
+    <p>When it's done, the panel shows you what happened.</p>
+    <p>
+      <strong>Added</strong> is the new work, listed per child.
+      <strong>Already there</strong> is everything it recognized and left alone.
+    </p>
+
+    <div class="note brass">
+      <span class="label">Most weeks it'll say "already done" a lot</span>
+      <p>
+        Gradelink shows the whole quarter every time, not just this week, so the
+        tool keeps re-reading work it already handled. It remembers and skips it.
+        A short "added" list next to a long "already done" list is it working
+        properly.
+      </p>
+    </div>
+
+    <p>
+      <strong>Added recently — add it again?</strong> Your personal additions repeat
+      every week, so if this week's copy already went in, it holds the item back
+      rather than writing a second one. It tells you when it last went in and gives
+      you a button. It never drops something without telling you. If it decided not
+      to write something, it says so and lets you overrule it.
+    </p>
+    <p>
+      <strong>Ignored courses</strong> lists the ones you told it to skip, so you
+      can check the list is right.
+    </p>
+    <p>
+      <strong>Things to look at</strong> is the section to actually read. A child it
+      couldn't reach, a name that didn't match — anything it couldn't make sense of
+      ends up here.
+    </p>
+  </section>
+
+  <section class="part">
+    <div class="part-head">
+      <span class="part-num">07</span>
+      <h2>The boards</h2>
+    </div>
+    <p>
+      The front page of your tracker holds one board per child, and each board
+      shows that child's work in three columns — Not started, In progress, Done.
+      Click the assignment card to open it and see the description. Drag a card
+      across to the "Done" column as your kiddo finishes the assignment.
+    </p>
+
+    <div class="note wine">
+      <span class="label">There's nothing to set up each week</span>
+      <p>
+        New assignments automatically load onto the boards after you run the sync
+        each week. When you don't need to see an assignment on a board anymore,
+        just check the "archived" box on the assignment. Archiving clears the
+        assignment off the board without losing it, and you can untick the box any
+        time to bring it back.
+      </p>
+    </div>
+
+    <p>
+      Under the boards is the full <strong>Assignments List</strong> table, every
+      row the tool has ever written. You'll rarely need it, but that's where
+      everything lives if you want to search back through the year.
+    </p>
+
+    <div class="note brass">
+      <span class="label">Note</span>
+      <p>
+        If you delete an assignment, the sync tool remembers it already wrote that
+        one, so it won't come back into Notion the next time you run the sync —
+        including if you deleted it by mistake. Archiving is the reversible
+        version.
+      </p>
+    </div>
+  </section>
+
+  <section class="part">
+    <div class="part-head no-num">
+      <h2>When something goes sideways</h2>
+    </div>
+    <div class="trouble">
+      <details>
+        <summary>"Not set up yet"</summary>
+        <div class="answer"><p>The settings haven't been filled in. Go back to step 4 — it needs the key and the tracker picked before it can do anything.</p></div>
+      </details>
+      <details>
+        <summary>"Open your Gradelink Grades page first"</summary>
+        <div class="answer"><p>The button was clicked from some other tab. Go to Gradelink, click <strong>Grades</strong>, and click it from there.</p></div>
+      </details>
+      <details>
+        <summary>"Nothing came back from the Gradelink page"</summary>
+        <div class="answer"><p>Usually a page that's been sitting open long enough to be logged out. Reload it and try again.</p></div>
+      </details>
+      <details>
+        <summary>"That key works, but it has not been given access to anything yet"</summary>
+        <div class="answer"><p>Step 5 of section 3 — the key is real but it hasn't been given the door. Open your tracker in Notion, <strong>•••</strong> → <strong>Connections</strong>, pick your integration, then press <strong>Find</strong> again.</p></div>
+      </details>
+      <details>
+        <summary>Notion could not find your tracker</summary>
+        <div class="answer"><p>Same cause, usually — the integration got disconnected from the tracker, or you're pointed at a different database than the one you connected. Press <strong>Find</strong> again and re-pick it.</p></div>
+      </details>
+      <details>
+        <summary>"Nothing was read for [child]"</summary>
+        <div class="answer"><p>The name doesn't match. Open the settings and check the Gradelink spelling for that child against the menu at the top right of the portal.</p></div>
+      </details>
+      <details>
+        <summary>A course landed under "Other"</summary>
+        <div class="answer"><p>It didn't recognize that course name. Nothing's broken, and the assignment is still there — add a subject rule for it in the settings, or send me the course name.</p></div>
+      </details>
+      <details>
+        <summary>It added way fewer assignments than the page shows</summary>
+        <div class="answer"><p>That's expected. Gradelink shows the whole quarter every time, so most of what's on that page went in during previous weeks. Check the "already there" list in the summary. If something's missing from both lists, tell me.</p></div>
+      </details>
+      <details>
+        <summary>I ran it twice by accident</summary>
+        <div class="answer"><p>Nothing bad happens. Anything already in there gets left alone rather than doubled up.</p></div>
+      </details>
+      <details>
+        <summary>The button doesn't do anything</summary>
+        <div class="answer"><p>Check that the extension is still pinned and still enabled — <code>chrome://extensions</code> lists it with a switch. Chrome sometimes turns extensions off after an update.</p></div>
+      </details>
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>
