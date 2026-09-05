@@ -451,9 +451,9 @@
       <li>Click the <strong>puzzle-piece icon</strong> at the top right of Chrome (next to the search bar), find <strong>Gradelink to Notion</strong> in the list, and click the <strong>pin</strong> next to it.</li>
     </ol>
     <p>
-      That third step is optional, but helpful; pinning puts the button on your toolbar where you
-      can reach it. Chrome tucks new extensions behind that puzzle piece by
-      default, and the button is how you run this every week.
+      That third step is optional but worth doing: Chrome hides new extensions
+      behind that puzzle piece, and pinning puts the button on your toolbar where
+      you'll reach for it every week.
     </p>
 
     <div class="note brass">
@@ -587,6 +587,40 @@
       are optional: set them and each week's copy carries that weekday's date;
       leave them and the row arrives without a date.
     </p>
+    <h3 style="font-size:var(--step1);margin:2.1rem 0 0.85rem;">What each row carries</h3>
+    <p>
+      Three switches, all off to start with. None of them change the assignment
+      page itself — the full description is always written there. Your tracker
+      already has the properties they need.
+    </p>
+    <p>
+      <strong>Copy the teacher's Materials: line.</strong> Some teachers write a
+      <strong>Materials:</strong> line inside the description. This copies what
+      follows into the Resources &amp; Materials property, to make it easy to see
+      and use links, etc.
+    </p>
+    <p>
+      <strong>Put the description in a Description property.</strong> Lets the
+      description show on a board card without opening it. You'll need to switch
+      the property visibility on in the board's settings in Notion too.
+    </p>
+    <p>
+      <strong>Record a due date written in the description.</strong> Teachers
+      sometimes give a date in the text that differs from the one they set on the
+      assignment. This puts what they wrote in its own property, beside the date
+      Gradelink gave — your card's Due Date is never changed. It fills only when
+      the two disagree.
+    </p>
+    <h3 style="font-size:var(--step1);margin:2.1rem 0 0.85rem;">Attachments</h3>
+    <p>
+      Two more switches, both off to start with. When a teacher attaches a
+      worksheet, these are what keep a copy you can still open later — one puts
+      the file on the Notion card, the other saves the week's files to your
+      computer. Both make the sync take longer.
+    </p>
+    <p>
+      Leave them off for now if you like — section 7 explains which one you want.
+    </p>
     <p>
       Press <strong>Save</strong> when you're done. You can come back and change any
       of this later.
@@ -637,9 +671,9 @@
     <p>
       <strong>Added recently — add it again?</strong> Your personal additions repeat
       every week, so if this week's copy already went in, it holds the item back
-      rather than writing a second one. It tells you when it last went in and gives
-      you a button. It never drops something without telling you. If it decided not
-      to write something, it says so and lets you overrule it.
+      rather than writing a second one — telling you when it last went in, and
+      giving you a button to add it anyway. It never drops something without
+      telling you.
     </p>
     <p>
       <strong>Ignored courses</strong> lists the ones you told it to skip, so you
@@ -655,6 +689,57 @@
   <section class="part">
     <div class="part-head">
       <span class="part-num">07</span>
+      <h2>Attachments</h2>
+    </div>
+    <p>
+      When a teacher attaches a worksheet, the assignment card gets a link to it.
+      That link is more fragile than it looks.
+    </p>
+
+    <div class="note brass">
+      <span class="label">A Gradelink attachment link only opens if two things are true at once</span>
+      <p>
+        You're signed in to Gradelink in that browser, <strong>and</strong>
+        Gradelink is currently showing the child that work belongs to.
+        Miss either one and the link doesn't work.
+      </p>
+    </div>
+
+    <p>
+      <strong>Two settings make a copy that lasts.</strong> Both are off to begin
+      with, under Attachments in the settings, and both read the files during the
+      sync, so it takes longer with either one on.
+    </p>
+
+    <p>
+      <strong>Put the attachment itself on the Notion card.</strong> The file is
+      uploaded to Notion during the sync, so the card holds the worksheet instead
+      of a pointer back to Gradelink. After that it opens anywhere Notion does,
+      for as long as you keep the card.
+    </p>
+
+    <div class="note wine">
+      <span class="label">Notion limits how big a file can be</span>
+      <p>
+        On a free Notion plan it's 5 MB per file, which most worksheets are
+        comfortably under but a scanned packet may not be. On a paid plan it's far
+        more. Anything too big keeps its Gradelink link and is named in the
+        report, so you always know which ones didn't make it.
+      </p>
+    </div>
+
+    <p>
+      <strong>Save the week's files to your computer.</strong> Every attachment
+      read during the sync, in one zip in your downloads, each file named for the
+      child and assignment it came from. This is the one to use if your Notion
+      plan won't take the files. The first time, your browser may ask whether to
+      allow downloads from Gradelink.
+    </p>
+  </section>
+
+  <section class="part">
+    <div class="part-head">
+      <span class="part-num">08</span>
       <h2>The boards</h2>
     </div>
     <p>
@@ -710,12 +795,8 @@
         <div class="answer"><p>Usually a page that's been sitting open long enough to be logged out. Reload it and try again.</p></div>
       </details>
       <details>
-        <summary>"That key works, but it has not been given access to anything yet"</summary>
-        <div class="answer"><p>Step 5 of section 3 — the key is real but it hasn't been given the door. Open your tracker in Notion, <strong>•••</strong> → <strong>Connections</strong>, pick your integration, then press <strong>Find</strong> again.</p></div>
-      </details>
-      <details>
-        <summary>Notion could not find your tracker</summary>
-        <div class="answer"><p>Same cause, usually — the integration got disconnected from the tracker, or you're pointed at a different database than the one you connected. Press <strong>Find</strong> again and re-pick it.</p></div>
+        <summary>"That key works, but it has not been given access to anything yet" — or Notion can't find your tracker</summary>
+        <div class="answer"><p>Step 5 of section 3, nearly always: the key is real but it hasn't been given the door. Open your tracker in Notion, <strong>•••</strong> → <strong>Connections</strong>, pick your integration, then press <strong>Find</strong> again and re-pick the tracker.</p></div>
       </details>
       <details>
         <summary>"Nothing was read for [child]"</summary>
