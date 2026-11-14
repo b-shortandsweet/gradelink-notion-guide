@@ -414,6 +414,11 @@
       get it going, I'll meet you at the coffee shop and walk you through it. 😉
     </p>
     <p class="hand">~ Brianne</p>
+    <p style="font-style: italic;">
+      P.S. If you're interested in hearing more about the systems I've built for
+      my family and home, follow along here:
+      <a href="https://www.instagram.com/briannetremp.hah/">@briannetremp.hah</a>
+    </p>
     <ul class="timing">
       <li><span class="k">Setting up</span><span class="v">about 15 minutes, once</span></li>
       <li><span class="k">Each week after</span><span class="v">under a minute</span></li>
@@ -446,7 +451,7 @@
       browser.
     </p>
     <ol>
-      <li>Open <a href="https://chrome.google.com/webstore/detail/dlfifoaegchgkgbefelekagfndkidapo"><strong>Gradelink to Notion</strong></a>.</li>
+      <li>Open <a href="https://chromewebstore.google.com/detail/gradelink-to-notion/dlfifoaegchgkgbefelekagfndkidapo"><strong>Gradelink to Notion</strong></a>.</li>
       <li>Click <strong>Add to Chrome</strong>, then <strong>Add extension</strong> when Chrome asks.</li>
       <li>Click the <strong>puzzle-piece icon</strong> at the top right of Chrome (next to the search bar), find <strong>Gradelink to Notion</strong> in the list, and click the <strong>pin</strong> next to it.</li>
     </ol>
@@ -504,15 +509,15 @@
       extension.
     </p>
     <ol>
-      <li>Open <a href="https://www.notion.so/my-integrations">notion.so/my-integrations</a> in a browser.</li>
-      <li>Click <strong>New integration</strong>.</li>
-      <li>Name it something like <code>Homeschool</code>, pick your workspace, click <strong>Submit</strong>.</li>
-      <li>Copy the <strong>Internal Integration Secret</strong> — a long code starting <code>ntn_</code> or <code>secret_</code>. Keep it somewhere for a minute; you'll paste it in the next step.</li>
-      <li>Open your tracker in Notion. Click the <strong>•••</strong> menu at the top right, choose <strong>Connections</strong>, and pick the integration you just made. <strong>Without this the key opens nothing</strong> — it's the step everybody misses, and it's why the extension can't find your tracker later.</li>
+      <li>Open <a href="https://www.notion.so/my-integrations">notion.so/my-integrations</a> in a browser. It takes you to Notion's <strong>Connections</strong> page.</li>
+      <li>Click <strong>New connection</strong>.</li>
+      <li>Name it something like <code>Homeschool</code>, leave <strong>API token</strong> selected, and click <strong>Create connection</strong>.</li>
+      <li>Open the connection you just made. On its <strong>Configuration</strong> tab, click the copy icon beside <strong>API token</strong> — a long code starting <code>ntn_</code>. Notion calls it an API token and the extension calls it an integration secret; they're the same thing. Keep it somewhere for a minute; you'll paste it in the next step.</li>
+      <li>Open your tracker in Notion. Click the <strong>•••</strong> menu at the top right, then <strong>More</strong> → <strong>Connections</strong>, and pick the connection you just made. <strong>Without this the key opens nothing</strong> — it's the step everybody misses, and it's why the extension can't find your tracker later.</li>
     </ol>
 
     <div class="note wine loud">
-      <span class="label">⚠️ Treat that secret like a password</span>
+      <span class="label">⚠️ Treat that key like a password</span>
       <p>
         Your Notion key allows access to your personal Notion app; anyone who has
         it can access whatever you put in Notion. Once you paste it in to the
@@ -536,7 +541,7 @@
 
     <h3 style="font-size:var(--step1);margin:2.1rem 0 0.85rem;">Connect to Notion</h3>
     <ol>
-      <li>Paste your secret into <strong>Integration secret</strong>.</li>
+      <li>Paste your API token into <strong>Integration secret</strong>.</li>
       <li>Click <strong>Find</strong>. It lists the trackers that key can reach — usually just the one.</li>
       <li>Pick the assignment tracker from the list.</li>
       <li>Press <strong>Save</strong>, then <strong>Check connection</strong>. It should tell you your tracker is reachable.</li>
@@ -659,14 +664,21 @@
     </p>
 
     <div class="note brass">
-      <span class="label">Most weeks it'll say "already done" a lot</span>
+      <span class="label">Most weeks it'll say "already there" a lot</span>
       <p>
         Gradelink shows the whole quarter every time, not just this week, so the
         tool keeps re-reading work it already handled. It remembers and skips it.
-        A short "added" list next to a long "already done" list is it working
+        A short "added" list next to a long "already there" list is it working
         properly.
       </p>
     </div>
+
+    <p>
+      <strong>Done and archived</strong> is work you already finished and archived
+      that's still showing in Gradelink. Nothing to do here. It's matched on
+      Gradelink's own assignment number, so a new assignment with the same title
+      as an old one still comes in.
+    </p>
 
     <p>
       <strong>Added recently — add it again?</strong> Your personal additions repeat
@@ -674,6 +686,11 @@
       rather than writing a second one — telling you when it last went in, and
       giving you a button to add it anyway. It never drops something without
       telling you.
+    </p>
+    <p>
+      <strong>Attachments</strong> only shows up when one of the attachment
+      switches is on: how many files made it onto the card, and how many are
+      still only a link.
     </p>
     <p>
       <strong>Ignored courses</strong> lists the ones you told it to skip, so you
@@ -796,7 +813,7 @@
       </details>
       <details>
         <summary>"That key works, but it has not been given access to anything yet" — or Notion can't find your tracker</summary>
-        <div class="answer"><p>Step 5 of section 3, nearly always: the key is real but it hasn't been given the door. Open your tracker in Notion, <strong>•••</strong> → <strong>Connections</strong>, pick your integration, then press <strong>Find</strong> again and re-pick the tracker.</p></div>
+        <div class="answer"><p>Step 5 of section 3, nearly always: the key is real but it hasn't been given the door. Open your tracker in Notion, <strong>•••</strong> → <strong>More</strong> → <strong>Connections</strong>, pick your connection, then press <strong>Find</strong> again and re-pick the tracker.</p></div>
       </details>
       <details>
         <summary>"Nothing was read for [child]"</summary>
